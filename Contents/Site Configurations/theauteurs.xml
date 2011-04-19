@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site site="http://www.theauteurs.com"
+	    plugin="http://www.theauteurs.com/player/AuteursPlayer.swf"
+			initialState="loading"
+			version="1.0">
+			
+	<!--
+	  Variable size video streams so use 0 width and height
+	-->
+	<crop x="0" y="0" width="0" height="0" />
+    
+    <seekbar type="thumb">
+      <start x="37" y="-20" />
+      <end x="520" y="-20" />
+   </seekbar>
+   
+   <condition name="paused">
+    <and>
+      <color x="14" y="-25" rgb="323232"/>
+      <color x="22" y="-25" op="brighter-than" rgb="323232"/>
+    </and>
+  </condition>
+  
+  <state name="loading">
+  
+    <!-- 
+        The click to play button appears in the centre of the video
+        which is a different absolute position depending on the actual
+        video size. Hack this by checking and clicking multiple places.
+    	The play button is 40 square so going in increments of 30
+    	gives overlap to spare
+    -->
+    <event>
+      <condition>
+        <or>
+          <color x="305" y="135" op="brighter-than" rgb="bdbdbd" />
+          <color x="305" y="165" op="brighter-than" rgb="bdbdbd" />
+          <color x="305" y="195" op="brighter-than" rgb="bdbdbd" />
+          <color x="305" y="225" op="brighter-than" rgb="bdbdbd" />
+          <color x="335" y="135" op="brighter-than" rgb="bdbdbd" />
+          <color x="335" y="165" op="brighter-than" rgb="bdbdbd" />
+          <color x="335" y="195" op="brighter-than" rgb="bdbdbd" />
+          <color x="335" y="225" op="brighter-than" rgb="bdbdbd" />
+        </or>
+      </condition>
+      <action>
+        <pause time="500" />
+        <click x="305" y="135" />
+        <click x="305" y="165" />
+        <click x="305" y="195" />
+        <click x="305" y="225" />
+        <click x="335" y="135" />
+        <click x="335" y="165" />
+        <click x="335" y="195" />
+        <click x="335" y="225" />
+        <goto state="playing" />
+      </action>
+    </event>
+    
+  </state>
+
+	<!-- PLAYING -->
+	<state name="playing">
+	  <event>
+	  <condition>
+          <command name="pause"/>
+      </condition>
+      <action>
+        <click x="305" y="135" />
+        <click x="17" y="-20" />
+      </action>
+    </event>
+
+    <!-- Detect paused video -->
+    <event>
+      <condition>
+        <condition name="paused"/>
+      </condition>
+      <action>
+        <goto state="paused"/>
+      </action>
+    </event>
+		
+	</state>
+	
+	<!-- PAUSED -->
+	<state name="paused">
+		<event>
+          <condition>
+             <command name="play"/>
+          </condition>
+      	  <action>
+             <click x="305" y="135" />
+             <click x="17" y="-20" />
+          </action>
+    </event>
+ 
+    <!-- Go To Playing -->
+      <event>
+        <condition>
+            <not> <condition name="paused"/> </not>
+        </condition>
+        <action>
+          <goto state="playing"/>
+        </action>
+      </event>
+	</state>
+</site>
